@@ -1,17 +1,20 @@
-import "./App.css";
-import { useEffect } from "react";
-import { requestGet } from "./config/request";
+import { Routes, Route } from "react-router-dom";
+import routes from "./routes/index.jsx";
 
 function App() {
-    useEffect(() => {
-        const fetchData = async () => {
-            const res = await requestGet();
-            console.log(res);
-        };
-        fetchData();
-    }, []);
-
-    return <>hello</>;
+    return (
+        <div>
+            <Routes>
+                {routes.map((route) => (
+                    <Route
+                        key={route.path}
+                        path={route.path}
+                        element={route.element}
+                    />
+                ))}
+            </Routes>
+        </div>
+    );
 }
 
 export default App;
