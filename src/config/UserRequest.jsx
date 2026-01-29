@@ -8,6 +8,13 @@ export const requestLogin = async (data) => {
     return res.data;
 };
 
+export const requestLoginGoogle = async (credential) => {
+    const res = await request.post(`${apiUser}/login-google`, {
+        credential,
+    });
+    return res.data;
+};
+
 export const requestRegister = async (data) => {
     const res = await request.post(`${apiUser}/register`, data);
     return res.data;

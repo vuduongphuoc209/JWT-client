@@ -3,8 +3,10 @@ import { Form, Input, Button, Checkbox, Divider, message } from "antd";
 import { MailOutlined, LockOutlined } from "@ant-design/icons";
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
-import { requestLogin } from "../../config/UserRequest";
+import { requestLogin, requestLoginGoogle } from "../../config/UserRequest";
 import "./LoginUser.css";
+import { GoogleOAuthProvider } from "@react-oauth/google";
+import { GoogleLogin } from "@react-oauth/google";
 
 function LoginUser() {
     const navigate = useNavigate();
@@ -28,6 +30,22 @@ function LoginUser() {
         }
     };
 
+    const handleSuccess = async (response) => {
+        try {
+            const { credential } = response;
+
+            const res = await requestLoginGoogle(credential);
+
+            message.success(res.message);
+
+            navigate("/");
+            window.location.reload();
+        } catch (error) {
+            message.error("Dang nhap Google that bai");
+            console.log(error);
+        }
+    };
+
     return (
         <div className="login-page">
             <Header />
@@ -39,7 +57,6 @@ function LoginUser() {
                             <h1>Đăng nhập</h1>
                             <p>Chào mừng bạn quay trở lại!</p>
                         </div>
-
                         <Form
                             layout="vertical"
                             size="large"
@@ -101,8 +118,15 @@ function LoginUser() {
                                 Đăng nhập
                             </Button>
                         </Form>
-
                         <Divider>Hoặc</Divider>
+                        <GoogleOAuthProvider clientId="263079252814-4gol1r1db6mt7rcs21jhvdjd6n163gas.apps.googleusercontent.com">
+                            <GoogleLogin
+                                onSuccess={handleSuccess}
+                                onError={() => {
+                                    console.log("Login Failed");
+                                }}
+                            />
+                        </GoogleOAuthProvider>
 
                         <div className="login-footer">
                             <span>Chưa có tài khoản?</span>
