@@ -7,7 +7,7 @@ import { Dropdown, message, Space } from "antd";
 import { requestLogout } from "../../config/UserRequest";
 
 const Header = () => {
-    const { dataUser } = useStore();
+    const { dataUser, isAdmin } = useStore();
     const navigate = useNavigate();
 
     const handleLogout = async () => {
@@ -18,14 +18,16 @@ const Header = () => {
             }, 1000);
             navigate("/");
         } catch (error) {
-            message.error(error.response.data.message);
+            message.error(
+                error.response?.data?.message || "Đăng xuất thất bại",
+            );
         }
     };
 
     const items = [
         {
             key: "1",
-            label: "My Account",
+            label: dataUser?.email || "My Account",
             disabled: true,
         },
         {
@@ -35,18 +37,29 @@ const Header = () => {
             key: "2",
             label: "Profile",
             onClick: () => navigate("/profile"),
+            className: "header-dropdown-profile",
         },
+        ...(isAdmin
+            ? [
+                  {
+                      key: "admin",
+                      label: "Quản lý Users",
+                      onClick: () => navigate("/users"),
+                      className: "header-dropdown-admin",
+                  },
+              ]
+            : []),
         {
             key: "3",
             label: "Settings",
             icon: <SettingOutlined />,
-
             onClick: () => navigate("/settings"),
         },
         {
             key: "4",
             label: "Logout",
             onClick: handleLogout,
+            className: "header-dropdown-logout",
         },
     ];
     return (
@@ -59,16 +72,25 @@ const Header = () => {
                 </div>
                 <div className="header-right">
                     {dataUser && dataUser._id ? (
-                        <div style={{ cursor: "pointer" }}>
-                            <Dropdown menu={{ items }}>
-                                <a onClick={(e) => e.preventDefault()}>
-                                    <Space>
-                                        Hover me
-                                        <DownOutlined />
-                                    </Space>
-                                </a>
-                            </Dropdown>
-                        </div>
+                        <>
+                            {isAdmin && (
+                                <Link to="/users" className="admin-link">
+                                    Quản lý Users
+                                </Link>
+                            )}
+                            <div style={{ cursor: "pointer" }}>
+                                <Dropdown menu={{ items }}>
+                                    <a onClick={(e) => e.preventDefault()}>
+                                        <Space>
+                                            {dataUser?.fullName ||
+                                                dataUser?.email ||
+                                                "Tài khoản"}
+                                            <DownOutlined />
+                                        </Space>
+                                    </a>
+                                </Dropdown>
+                            </div>
+                        </>
                     ) : (
                         <Link to="/login" className="login-button">
                             Login

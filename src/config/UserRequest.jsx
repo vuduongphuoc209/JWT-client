@@ -44,3 +44,29 @@ export const requestVerifyForgotPassword = async (data) => {
     const res = await request.post(`${apiUser}/verify-forgot-password`, data);
     return res.data;
 };
+
+// --- Phân quyền: Admin quản lý users, User xem/sửa bản thân ---
+export const requestGetAllUsers = async () => {
+    const res = await apiClient.get(apiUser);
+    return res.data;
+};
+
+export const requestGetUserById = async (id) => {
+    const res = await apiClient.get(`${apiUser}/${id}`);
+    return res.data;
+};
+
+export const requestCreateUser = async (data) => {
+    const res = await apiClient.post(apiUser, data);
+    return res.data;
+};
+
+export const requestUpdateUser = async (id, data) => {
+    const res = await apiClient.put(`${apiUser}/${id}`, data);
+    return res.data;
+};
+
+export const requestDeleteUser = async (id) => {
+    const res = await apiClient.delete(`${apiUser}/${id}`);
+    return res.data;
+};

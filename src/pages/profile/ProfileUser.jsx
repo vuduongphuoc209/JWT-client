@@ -1,0 +1,136 @@
+import Header from "../../components/header/header";
+import { Form, Input, Button, Card, message } from "antd";
+import {
+    UserOutlined,
+    MailOutlined,
+    PhoneOutlined,
+    LockOutlined,
+} from "@ant-design/icons";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useStore } from "../../hooks/useStore";
+import { requestUpdateUser } from "../../config/UserRequest";
+import "./ProfileUser.css";
+
+function ProfileUser() {
+    const { dataUser, setDataUser, loading: contextLoading } = useStore();
+    const navigate = useNavigate();
+    const [form] = Form.useForm();
+    const [loading, setLoading] = useState(false);
+
+    useEffect(() => {
+        if (!contextLoading && !dataUser?._id) {
+            navigate("/login");
+            return;
+        }
+        if (dataUser) {
+            form.setFieldsValue({
+                fullName: dataUser.fullName,
+                email: dataUser.email,
+                phone: dataUser.phone || "",
+            });
+        }
+    }, [dataUser, contextLoading, form, navigate]);
+
+    const onFinish = async (values) => {
+        if (!dataUser?._id) return;
+        setLoading(true);
+        try {
+            const payload = {};
+            if (values.fullName !== undefined) payload.fullName = values.fullName;
+            if (values.email !== undefined) payload.email = values.email;
+            if (values.phone !== undefined) payload.phone = values.phone;
+            if (values.password && values.password.trim() !== "")
+                payload.password = values.password;
+            const res = await requestUpdateUser(dataUser._id, payload);
+            if (res?.metadata) setDataUser(res.metadata);
+            message.success("Cập nhật thông tin thành công");
+        } catch (error) {
+            message.error(
+                error.response?.data?.message || "Cập nhật thất bại",
+            );
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    if (contextLoading || !dataUser?._id) {
+        return (
+            <div className="profile-page">
+                <Header />
+                <main className="profile-main">
+                    <div className="profile-loading">Đang tải...</div>
+                </main>
+            </div>
+        );
+    }
+
+    return (
+        <div className="profile-page">
+            <Header />
+            <main className="profile-main">
+                <div className="profile-wrapper">
+                    <Card className="profile-card" title="Thông tin cá nhân">
+                        <Form
+                            form={form}
+                            layout="vertical"
+                            size="large"
+                            onFinish={onFinish}
+                        >
+                            <Form.Item
+                                label="Họ và tên"
+                                name="fullName"
+                                rules={[{ required: true, message: "Nhập họ tên" }]}
+                            >
+                                <Input
+                                    prefix={<UserOutlined />}
+                                    placeholder="Nguyen Van A"
+                                />
+                            </Form.Item>
+                            <Form.Item
+                                label="Email"
+                                name="email"
+                                rules={[
+                                    { required: true },
+                                    { type: "email", message: "Email không hợp lệ" },
+                                ]}
+                            >
+                                <Input
+                                    prefix={<MailOutlined />}
+                                    placeholder="email@gmail.com"
+                                />
+                            </Form.Item>
+                            <Form.Item label="Số điện thoại" name="phone">
+                                <Input
+                                    prefix={<PhoneOutlined />}
+                                    placeholder="0987654321"
+                                />
+                            </Form.Item>
+                            <Form.Item
+                                label="Mật khẩu mới (để trống nếu không đổi)"
+                                name="password"
+                            >
+                                <Input.Password
+                                    prefix={<LockOutlined />}
+                                    placeholder="••••••••"
+                                />
+                            </Form.Item>
+                            <Form.Item>
+                                <Button
+                                    type="primary"
+                                    htmlType="submit"
+                                    loading={loading}
+                                    className="profile-btn"
+                                >
+                                    Lưu thay đổi
+                                </Button>
+                            </Form.Item>
+                        </Form>
+                    </Card>
+                </div>
+            </main>
+        </div>
+    );
+}
+
+export default ProfileUser;

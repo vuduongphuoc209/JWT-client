@@ -30,8 +30,17 @@ export function Provider({ children }) {
         }
     }, [token]);
 
+    const isAdmin = !!dataUser?.isAdmin;
+
     return (
-        <Context.Provider value={{ dataUser, setDataUser, loading }}>
+        <Context.Provider
+            value={{
+                dataUser,
+                setDataUser,
+                loading,
+                isAdmin,
+            }}
+        >
             {children}
         </Context.Provider>
     );

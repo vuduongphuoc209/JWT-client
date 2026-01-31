@@ -3,6 +3,8 @@ import Header from "../components/header/header";
 import RegisterUser from "../pages/register/RegisterUser";
 import ForgotPassword from "../pages/forgot-password/ForgotPassword";
 import ResetPassword from "../pages/reset-password/ResetPassword";
+import ProfileUser from "../pages/profile/ProfileUser";
+import AdminUsers from "../pages/users/AdminUsers";
 
 const routes = [
     {
@@ -24,6 +26,14 @@ const routes = [
     {
         path: "/reset-password",
         element: <ResetPassword />,
+    },
+    {
+        path: "/profile",
+        element: <ProfileUser />,
+    },
+    {
+        path: "/users",
+        element: <AdminUsers />,
     },
 ];
 

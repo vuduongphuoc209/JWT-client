@@ -29,6 +29,18 @@
 .header-right {
   display: flex;
   align-items: center;
+  gap: 16px;
+}
+
+.admin-link {
+  color: #646cff;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.admin-link:hover {
+  color: #535bf2;
+  text-decoration: underline;
 }
 
 .login-button {
@@ -43,4 +55,32 @@
 
 .login-button:hover {
   background-color: #535bf2;
+}
+
+/* Logout item trong dropdown: chữ đỏ, hover nền đỏ chữ trắng */
+.header-dropdown-logout.ant-dropdown-menu-item {
+  color: #ff4d4f !important; 
+}
+
+.header-dropdown-logout.ant-dropdown-menu-item:hover {
+  background-color: #ff4d4f !important;
+  color: #fff !important;
+}
+
+.header-dropdown-profile.ant-dropdown-menu-item {
+  color: #10a7de !important; 
+}
+
+.header-dropdown-profile.ant-dropdown-menu-item:hover {
+  background-color: #1f82e5 !important;
+  color: #fff !important;
+}
+
+.header-dropdown-admin.ant-dropdown-menu-item {
+  color: #535bf2 !important; 
+}
+
+.header-dropdown-admin.ant-dropdown-menu-item:hover {
+  background-color: #535bf2 !important;
+  color: #fff !important;
 }
